@@ -17,14 +17,14 @@ def call(String name, String fname = null) {
                 if (env['WORKSPACE'] == null) {
                     error "unstashParam: no workspace in current context"
                 }
+                if (env['NODE_NAME'].equals("master")) {
+                  workspace = new FilePath(null, env['WORKSPACE'])
+                }else {
+                  workspace = new FilePath(Jenkins.getInstance().getComputer(env['NODE_NAME']).getChannel(), env['WORKSPACE'])
+                }
 
-       if (env['NODE_NAME'].equals("master")) {
-           workspace = new FilePath(null, env['WORKSPACE'])
-       }else{
-                        workspace = new FilePath(Jenkins.getInstance().getComputer(env['NODE_NAME']).getChannel(), env['WORKSPACE'])
-       }
-
-                filename = fname == null ? param.getOriginalFileName() : fname
+                // filename = fname == null ? param.getOriginalFileName() : fname
+                filename = name
                 file = workspace.child(filename)
 
                 destFolder = file.getParent()
